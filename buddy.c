@@ -181,15 +181,15 @@ void *alloc_pages(int rank) {
     return block;
 }
 
-int return_pages(void *p) {
+void *return_pages(void *p) {
     if (!is_valid_address(p)) {
-        return -EINVAL;
+        return ERR_PTR(-EINVAL);
     }
     
     int page_idx = get_page_index(p);
     
     if (!is_allocated(page_idx)) {
-        return -EINVAL;
+        return ERR_PTR(-EINVAL);
     }
     
     // Find block size
@@ -280,7 +280,7 @@ int return_pages(void *p) {
     block->next = free_lists[current_rank];
     free_lists[current_rank] = block;
     
-    return OK;
+    return ERR_PTR(OK);
 }
 
 int query_ranks(void *p) {
